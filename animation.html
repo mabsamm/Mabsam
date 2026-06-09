@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Animation | Mabsam</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+    <style>
+        /* MEGA-FIX DE SCROLL FORZADO */
+        html, body {
+            overflow-y: auto !important;
+            overflow-x: hidden !important;
+            height: auto !important;
+            min-height: 100% !important;
+            background-color: #000;
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="particles-canvas"></canvas>
+
+        <div id="header-placeholder"></div>
+        <script>
+             fetch('header.html')
+            .then(r => r.text())
+            .then(data => {
+                document.getElementById('header-placeholder').innerHTML = data;
+            });
+        </script>
+
+    <main class="animation-page-wrapper">
+        
+        <div class="tags-wrapper">
+            <span class="pixel-tag magenta">emote</span>
+            <span class="pixel-tag cyan">loops</span>
+            <span class="pixel-tag lime">GIF Art</span>
+            <span class="pixel-tag magenta">Stickers</span>
+            <span class="pixel-tag cyan">Motion Graphics</span>
+            <span class="pixel-tag lime">FxF</span>
+            <span class="pixel-tag magenta">2D Animation</span>
+            <span class="pixel-tag cyan">Compositing</span>
+        </div>
+
+        <div class="anim-grid">
+            
+            <div class="anim-item">
+                <div class="anim-card"><video src="ANIMACIONES/3D.webm" loop muted playsinline preload="none"></video></div>
+                <a href="https://www.tiktok.com/@mab.sam/video/7593158763385834772" target="_blank" class="watch-link">WATCH IT HERE</a>
+            </div>
+
+            <div class="anim-item">
+                <div class="anim-card"><video src="ANIMACIONES/ANGEL.webm" loop muted playsinline preload="none"></video></div>
+                <a href="https://www.tiktok.com/@mab.sam/video/7554787887632387384" target="_blank" class="watch-link">WATCH IT HERE</a>
+            </div>
+
+            <div class="anim-item">
+                <div class="anim-card"><video src="ANIMACIONES/DISPATCH.webm" loop muted playsinline preload="none"></video></div>
+                <a href="https://www.tiktok.com/@mab.sam/video/7590088166225284372" target="_blank" class="watch-link">WATCH IT HERE</a>
+            </div>
+
+            <div class="anim-item">
+                <div class="anim-card"><video src="ANIMACIONES/ECHO.webm" loop muted playsinline preload="none"></video></div>
+                <a href="https://www.tiktok.com/@mab.sam/video/7483322113865174277" target="_blank" class="watch-link">WATCH IT HERE</a>
+            </div>
+
+            <div class="anim-item">
+                <div class="anim-card"><video src="ANIMACIONES/FUKOUNA.webm" loop muted playsinline preload="none"></video></div>
+                <a href="https://www.tiktok.com/@mab.sam/video/7520833360537619717" target="_blank" class="watch-link">WATCH IT HERE</a>
+            </div>
+
+            <div class="anim-item">
+                <div class="anim-card"><video src="ANIMACIONES/MAB.webm" loop muted playsinline preload="none"></video></div>
+                <a href="https://www.tiktok.com/@mab.sam/video/7482201819867794693" target="_blank" class="watch-link">WATCH IT HERE</a>
+            </div>
+
+            <div class="anim-item">
+                <div class="anim-card"><video src="ANIMACIONES/MADE.webm" loop muted playsinline preload="none"></video></div>
+                <a href="https://www.tiktok.com/@mab.sam/video/7514023711045913912" target="_blank" class="watch-link">WATCH IT HERE</a>
+            </div>
+
+            <div class="anim-item">
+                <div class="anim-card"><video src="ANIMACIONES/MIKU.webm" loop muted playsinline preload="none"></video></div>
+                <a href="https://www.youtube.com/watch?v=o6mS3bAY_Is" target="_blank" class="watch-link">WATCH IT HERE</a>
+            </div>
+
+            <div class="anim-item">
+                <div class="anim-card"><div class="coming-soon">COMING SOON</div></div>
+                <span class="watch-link-disabled">...</span>
+            </div>
+
+        </div>
+
+        <div style="height: 100px;"></div>
+    </main>
+
+    <script>
+        const videos = document.querySelectorAll('.anim-card video');
+        videos.forEach(v => {
+            const container = v.parentElement;
+            
+            container.addEventListener('mouseenter', () => {
+                v.muted = false; 
+                v.volume = 0.5; 
+                v.play().catch(e => console.log("Interacción requerida para audio"));
+            });
+            
+            container.addEventListener('mouseleave', () => {
+                v.pause();
+                v.currentTime = 0;
+                v.muted = true;
+            });
+        });
+
+        // Partículas laterales
+        const canvas = document.getElementById('particles-canvas');
+        const ctx = canvas.getContext('2d');
+        function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+        window.addEventListener('resize', resize);
+        resize();
+
+        const particles = [];
+        const symbols = ['✧', '✦', '♡', 'ミ★'];
+        class Particle {
+            constructor() { this.init(); }
+            init() {
+                const isLeft = Math.random() > 0.5;
+                this.x = isLeft ? Math.random() * (canvas.width * 0.12) : canvas.width - (Math.random() * (canvas.width * 0.12));
+                this.y = -Math.random() * canvas.height;
+                this.speedY = Math.random() * 2 + 1;
+                this.size = Math.random() * 15 + 10;
+                this.symbol = symbols[Math.floor(Math.random() * symbols.length)];
+                this.color = Math.random() > 0.5 ? '#ff00ff' : '#00f3ff';
+            }
+            update() { this.y += this.speedY; if (this.y > canvas.height) this.init(); }
+            draw() {
+                ctx.fillStyle = this.color; ctx.font = `${this.size}px Arial`;
+                ctx.shadowBlur = 10; ctx.shadowColor = this.color;
+                ctx.fillText(this.symbol, this.x, this.y); ctx.shadowBlur = 0;
+            }
+        }
+        for (let i = 0; i < 35; i++) particles.push(new Particle());
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let p of particles) { p.update(); p.draw(); }
+            requestAnimationFrame(animate);
+        }
+        animate();
+    </script>
+</body>
+</html>

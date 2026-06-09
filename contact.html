@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact | Mabsam</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+</head>
+<body>
+
+    <canvas id="particles-canvas"></canvas>
+
+        <div id="header-placeholder"></div>
+        <script>
+             fetch('header.html')
+            .then(r => r.text())
+            .then(data => {
+                document.getElementById('header-placeholder').innerHTML = data;
+            });
+        </script>
+
+    <main class="contact-layout">
+        
+        <div class="center-zone">
+            <div class="decorated-star-system">
+                <div class="star-layer layer-1"></div>
+                <div class="star-layer layer-2"></div>
+                <div class="star-layer layer-3"></div>
+                
+                <a href="https://vgen.co/mabsam" target="_blank" class="ig-center-icon">
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" width="100" height="100">
+                        <rect x="1" y="1" width="22" height="22" rx="7" stroke="#00f3ff" stroke-width="1.5"/>
+                        <text x="12" y="17" text-anchor="middle" fill="#00f3ff" 
+                            font-size="11" font-family="'VT323', monospace" font-weight="bold">VGen</text>
+                    </svg>
+                </a>
+
+            </div>
+            <p class="contact-subtitle">✩°｡⋆⸜ 🎧‧₊˚ ☁️⋅♡𓂃 ࣪ ִֶָ☾.<br>VISITA MI VGEN</p>
+        </div>
+
+        <div class="right-zone">
+            <div class="price-star-wrapper">
+                <div class="price-star-decorated">
+                    <div class="price-inner">
+                        <p class="price-text">
+                            Aquí están mis precios<br>
+                        <a href="https://mabsam.carrd.co/">✦ LINK ✦</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+</div>  
+
+    </main>
+
+    <script>
+        const canvas = document.getElementById('particles-canvas');
+        const ctx = canvas.getContext('2d');
+        function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+        window.addEventListener('resize', resize);
+        resize();
+
+        const particles = [];
+        const symbols = ['✧', '✦', 'ミ★', '♡'];
+        class Particle {
+            constructor() { this.init(); }
+            init() {
+                const isLeft = Math.random() > 0.5;
+                this.x = isLeft ? Math.random() * (canvas.width * 0.12) : canvas.width - (Math.random() * (canvas.width * 0.12));
+                this.y = -50;
+                this.speedY = Math.random() * 2 + 1;
+                this.color = Math.random() > 0.5 ? '#ff00ff' : '#00f3ff';
+                this.symbol = symbols[Math.floor(Math.random() * symbols.length)];
+                this.size = Math.random() * 15 + 10;
+            }
+            update() { this.y += this.speedY; if (this.y > canvas.height) this.init(); }
+            draw() {
+                ctx.fillStyle = this.color; ctx.font = `${this.size}px Arial`;
+                ctx.shadowBlur = 10; ctx.shadowColor = this.color;
+                ctx.fillText(this.symbol, this.x, this.y); ctx.shadowBlur = 0;
+            }
+        }
+        for (let i = 0; i < 40; i++) particles.push(new Particle());
+
+        window.addEventListener('mousemove', (e) => {
+            const star = document.createElement('div');
+            star.innerHTML = '★';
+            star.className = 'mouse-star';
+            star.style.left = e.pageX + 'px';
+            star.style.top = e.pageY + 'px';
+            document.body.appendChild(star);
+            setTimeout(() => star.remove(), 800);
+        });
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let p of particles) { p.update(); p.draw(); }
+            requestAnimationFrame(animate);
+        }
+        animate();
+    </script>
+</body>
+</html>
