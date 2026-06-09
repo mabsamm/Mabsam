@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Mabsam Overlay - Ultimate Cyberpunk v3</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs" type="module"></script>
+</head>
+<body>
+
+    <div id="lottie-container">
+        <dotlottie-player src="Fondo2.lottie" background="transparent" speed="1" autoplay loop></dotlottie-player>
+    </div>
+
+    <canvas id="particles-canvas"></canvas>
+    <div class="side-decor left-decor"></div>
+    <div class="side-decor right-decor"></div>
+
+    <div id="header-placeholder"></div>
+
+    <a href="ilustration.html" class="btn-link">
+        <div id="btn-ilustration" class="side-btn"><img src="Botones/ILUSTRACION.svg" alt="Ilustration"></div>
+    </a>
+
+    <a href="animation.html" class="btn-link">
+        <div id="btn-animation" class="side-btn"><img src="Botones/ANIMACION.svg" alt="Animation"></div>
+    </a>
+
+    <script>
+
+        fetch('header.html')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('header-placeholder').innerHTML = data;
+            })
+            .catch(error => console.error('Error al cargar el header:', error));
+
+        // SISTEMA DE PARTÍCULAS
+        const canvas = document.getElementById('particles-canvas');
+        const ctx = canvas.getContext('2d');
+        function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+        window.addEventListener('resize', resize);
+        resize();
+        
+        const particles = [];
+        const symbols = ['(๑•ᴗ•๑)', 'ʕ⸝⸝⸝˙Ⱉ˙ʔ', '♡'];
+        const neonColors = ['#00f3ff', '#ff00ff'];
+        
+        class Particle {
+            constructor() { this.init(); }
+            init() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.speedX = (Math.random() - 0.5) * 1.5;
+                this.speedY = (Math.random() - 0.5) * 1.5;
+                this.size = Math.random() * 20 + 15;
+                this.symbol = symbols[Math.floor(Math.random() * symbols.length)];
+                this.color = neonColors[Math.floor(Math.random() * neonColors.length)];
+            }
+            update() {
+                this.x += this.speedX; this.y += this.speedY;
+                if (this.x > canvas.width) this.x = 0; if (this.x < 0) this.x = canvas.width;
+                if (this.y > canvas.height) this.y = 0; if (this.y < 0) this.y = canvas.height;
+            }
+            draw() {
+                ctx.fillStyle = this.color; ctx.font = `bold ${this.size}px Arial`;
+                ctx.shadowBlur = 12; ctx.shadowColor = this.color;
+                ctx.fillText(this.symbol, this.x, this.y); ctx.shadowBlur = 0;
+            }
+        }
+        
+        for (let i = 0; i < 35; i++) particles.push(new Particle());
+        
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let p of particles) { p.update(); p.draw(); }
+            requestAnimationFrame(animate);
+        }
+        animate();
+    </script>
+    
+</body>
+</html>
